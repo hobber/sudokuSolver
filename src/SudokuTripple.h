@@ -11,6 +11,7 @@
 #include <iostream>
 
 #include "SudokuItem.h"
+#include "SudokuItemListener.h"
 
 class SudokuTripple {
 
@@ -37,6 +38,34 @@ public:
     items[0] = rhs.items[0];
     items[1] = rhs.items[1];
     items[2] = rhs.items[2];
+  }
+
+  SudokuItem *getItem(unsigned char index)
+  {
+    if(index >= 3)
+      return NULL;
+    return items[index];
+  }
+
+  bool setValue(unsigned char index, unsigned char value)
+  {
+    if(index >= 3)
+      return false;
+    return items[index]->setValue(value);
+  }
+
+  void addListener(SudokuItemListener* listener)
+  {
+    items[0]->addListener(listener);
+    items[1]->addListener(listener);
+    items[2]->addListener(listener);    
+  }
+
+  void disableValue(unsigned char impossibleValue)
+  {
+    items[0]->disableValue(impossibleValue);
+    items[1]->disableValue(impossibleValue);
+    items[2]->disableValue(impossibleValue);  
   }
 
   void print() const

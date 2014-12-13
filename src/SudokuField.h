@@ -40,9 +40,53 @@ public:
     rows[3].initialize(boxes[3].getRowTripple(0), boxes[4].getRowTripple(0), boxes[5].getRowTripple(0));
     rows[4].initialize(boxes[3].getRowTripple(1), boxes[4].getRowTripple(1), boxes[5].getRowTripple(1));
     rows[5].initialize(boxes[3].getRowTripple(2), boxes[4].getRowTripple(2), boxes[5].getRowTripple(2));
-    rows[6].initialize(boxes[6].getRowTripple(0), boxes[6].getRowTripple(0), boxes[8].getRowTripple(0));
-    rows[7].initialize(boxes[6].getRowTripple(1), boxes[6].getRowTripple(1), boxes[8].getRowTripple(1));
-    rows[8].initialize(boxes[6].getRowTripple(2), boxes[6].getRowTripple(2), boxes[8].getRowTripple(2));    
+    rows[6].initialize(boxes[6].getRowTripple(0), boxes[7].getRowTripple(0), boxes[8].getRowTripple(0));
+    rows[7].initialize(boxes[6].getRowTripple(1), boxes[7].getRowTripple(1), boxes[8].getRowTripple(1));
+    rows[8].initialize(boxes[6].getRowTripple(2), boxes[7].getRowTripple(2), boxes[8].getRowTripple(2));  
+
+    rows[0].setID(0); 
+    rows[1].setID(1);
+    rows[2].setID(2);
+    rows[3].setID(3);
+    rows[4].setID(4);
+    rows[5].setID(5);
+    rows[6].setID(6);
+    rows[7].setID(7);
+    rows[8].setID(8);
+  }
+
+  bool setValue(unsigned char column, unsigned char row, unsigned char value)  
+  {
+    bool result = columns[column].setValue(row, value);
+    std::cout << std::endl;
+    return result;
+  }
+
+  bool isSolved() const
+  {
+    for(unsigned char i=0; i<9; i++)
+      if(boxes[i].isComplete() == false)
+        return false;
+    return true;
+  }
+
+  bool solve()
+  {   
+    bool found = false;     
+    do
+    {
+      found = false;
+      for(unsigned char i=0; i<9; i++)
+      {
+        if(boxes[i].setLastItem())
+          found = true;
+        
+        if(boxes[i].setSingleChoice())             
+          found = true;
+      }       
+    } while(found);
+
+    return isSolved();
   }
 
   void print()
@@ -51,6 +95,8 @@ public:
     {      
       rows[i].print();
       std::cout << std::endl;
+      if(i % 3 == 2)
+        std::cout << std::endl;
     }
   }
 };

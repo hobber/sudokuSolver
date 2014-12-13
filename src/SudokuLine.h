@@ -8,9 +8,10 @@
 
 #pragma once
 
+#include "SudokuItemListener.h"
 #include "SudokuTripple.h"
 
-class SudokuLine {
+class SudokuLine : public SudokuItemListener {
 
   SudokuTripple tripples[3];
 
@@ -25,14 +26,45 @@ public:
     tripples[0] = tripple0;
     tripples[1] = tripple1;
     tripples[2] = tripple2;
+
+    tripples[0].addListener(this);
+    tripples[1].addListener(this);
+    tripples[2].addListener(this);
+  }
+
+  void setID(unsigned char ID)
+  {
+    tripples[0].getItem(0)->setID(ID*9);
+    tripples[0].getItem(1)->setID(ID*9+1);
+    tripples[0].getItem(2)->setID(ID*9+2);
+    tripples[1].getItem(0)->setID(ID*9+3);
+    tripples[1].getItem(1)->setID(ID*9+4);
+    tripples[1].getItem(2)->setID(ID*9+5);
+    tripples[2].getItem(0)->setID(ID*9+6);
+    tripples[2].getItem(1)->setID(ID*9+7);
+    tripples[2].getItem(2)->setID(ID*9+8);
+  }
+
+  bool setValue(unsigned char index, unsigned char value)
+  {
+    if(index >= 9)
+      return false;
+    return tripples[index / 3].setValue(index % 3, value);
+  }
+
+  void notify(unsigned char impossibleValue)
+  {
+    tripples[0].disableValue(impossibleValue);
+    tripples[1].disableValue(impossibleValue);
+    tripples[2].disableValue(impossibleValue);
   }
 
   void print() const
   {
     tripples[0].print();
-    std::cout << " ";
+    std::cout << "   ";
     tripples[1].print();
-    std::cout << " ";
+    std::cout << "   ";
     tripples[2].print();    
   }
 
