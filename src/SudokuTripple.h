@@ -40,7 +40,7 @@ public:
     items[2] = rhs.items[2];
   }
 
-  SudokuItem *getItem(unsigned char index)
+  SudokuItem *getItem(unsigned char index) const
   {
     if(index >= 3)
       return NULL;

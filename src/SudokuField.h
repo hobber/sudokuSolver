@@ -8,8 +8,10 @@
 
 #pragma once
 
+#include <ctype.h>
 #include <iomanip>
 #include <iostream>
+#include <vector>
 
 #include "SudokuBox.h"
 #include "SudokuLine.h"
@@ -81,12 +83,54 @@ public:
         if(boxes[i].setLastItem())
           found = true;
         
+        if(boxes[i].setLastChance())
+          found = true;
+
         if(boxes[i].setSingleChoice())             
+          found = true;
+
+        if(rows[i].setLastItem())
+          found = true;
+        
+        if(rows[i].setLastChance())
+          found = true;
+
+        if(columns[i].setLastItem())
+          found = true;
+        
+        if(columns[i].setLastChance())
           found = true;
       }       
     } while(found);
 
     return isSolved();
+  }
+
+  std::vector<unsigned char> getPossibilites(unsigned char ID) const
+  {
+     return rows[ID/9].getItem(ID % 9)->getPossibilites();
+  }
+
+  void readFromInput()
+  {
+    for(unsigned char i=0; i<9; i++)
+    {
+      std::string line;
+      std::cin >> line;      
+      if(line.length() != 9)
+      {
+        std::cout << "enter 9 characters for each line!" << std::endl;
+        i--;
+      }
+      else
+      {
+        for(unsigned char j=0; j<9; j++)
+        {
+          if(isdigit(line[j]))
+            setValue(j, i, line[j] - '0');
+        }
+      }
+    }    
   }
 
   void print()
