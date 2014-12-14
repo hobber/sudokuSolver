@@ -64,11 +64,43 @@ public:
       if(containsValue[i] == false) 
       {
         items[unsetItemIndex].setValue(i+1);
-        std::cout << " (last item)" << std::endl;
+        std::cout << " (last item in a box)" << std::endl;
         return true;
       }
 
     return false;
+  }
+
+  bool setLastChance()
+  {
+    bool found = false;
+    for(unsigned char value = 1; value<=9; value++)
+    {
+      unsigned char counter = 0;
+      unsigned char index = 0;
+      for(unsigned char i=0; i<9; i++)
+      {
+        if(items[i].isFixed())
+          continue;
+
+        if(items[i].testValue(value)) 
+        {
+          counter++;
+          index = i;
+        }
+
+        if(counter >= 2)
+          break;
+      }
+
+      if(counter != 1)
+        continue;
+
+      items[index].setValue(value);
+      std::cout << " (last chance in a box)" << std::endl;
+      found = true;
+    }
+    return found;
   }
 
   bool setSingleChoice()

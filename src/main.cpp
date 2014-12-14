@@ -96,7 +96,7 @@ void createField02(SudokuField &field)
 int main( int argc, const char* argv[] )
 {
   SudokuField field;
-  createField02(field);
+  createField01(field);
 
   std::cout << std::endl << "start solving..." << std::endl;
   if(field.solve())

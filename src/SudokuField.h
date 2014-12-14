@@ -81,7 +81,22 @@ public:
         if(boxes[i].setLastItem())
           found = true;
         
+        if(boxes[i].setLastChance())
+          found = true;
+
         if(boxes[i].setSingleChoice())             
+          found = true;
+
+        if(rows[i].setLastItem())
+          found = true;
+        
+        if(rows[i].setLastChance())
+          found = true;
+
+        if(columns[i].setLastItem())
+          found = true;
+        
+        if(columns[i].setLastChance())
           found = true;
       }       
     } while(found);

@@ -33,7 +33,7 @@ public:
     this->ID = ID;
   }
 
-  bool test(unsigned char value) const
+  bool testValue(unsigned char value) const
   {
     return value > 0 && value <= 9 && possibilites[value-1];
   }
@@ -59,14 +59,14 @@ public:
     for(unsigned char i=0; i<9; i++)
       if(possibilites[i]) {
         setValue(i+1);
-        std::cout << " (last choice)" << std::endl;
+        std::cout << " (last choice of item)" << std::endl;
         return true;
       }
   }  
 
   bool setValue(unsigned char value)
   {    
-    if(test(value) == false)
+    if(testValue(value) == false)
       return false;
 
     if(this->value == value)

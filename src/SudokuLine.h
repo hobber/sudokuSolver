@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "SudokuItem.h"
 #include "SudokuItemListener.h"
 #include "SudokuTripple.h"
 
@@ -49,7 +50,70 @@ public:
   {
     if(index >= 9)
       return false;
-    return tripples[index / 3].setValue(index % 3, value);
+    return getItem(index)->setValue(value);
+  }
+
+  bool setLastItem()
+  {
+    unsigned char fixedItemCounter = 0;    
+    for(unsigned char i=0; i<9; i++)
+      if(getItem(i)->isFixed())
+        fixedItemCounter++;
+
+    if(fixedItemCounter != 8)
+      return false;
+
+    bool containsValue[9];
+    unsigned char unsetItemIndex = -1;
+    for(unsigned char i=0; i<9; i++)
+      containsValue[i] = false;
+    for(unsigned char i=0; i<9; i++)
+      if(getItem(i)->isFixed())     
+        containsValue[getItem(i)->getValue()-1] = true;
+      else
+        unsetItemIndex = i;
+
+    for(unsigned char i=0; i<9; i++)
+      if(containsValue[i] == false) 
+      {
+        getItem(unsetItemIndex)->setValue(i+1);
+        std::cout << " (last item in a line)" << std::endl;
+        return true;
+      }
+
+    return false;
+  }
+
+  bool setLastChance()
+  {
+    bool found = false;
+    for(unsigned char value = 1; value<=9; value++)
+    {
+      unsigned char counter = 0;
+      unsigned char index = 0;
+      for(unsigned char i=0; i<9; i++)
+      {
+        if(getItem(i)->isFixed())
+          continue;
+
+        if(getItem(i)->testValue(value)) 
+        {
+          counter++;
+          index = i;
+        }
+
+        if(counter >= 2)
+          break;
+      }
+
+      if(counter != 1)
+        continue;
+
+      getItem(index)->setValue(value);
+      std::cout << " (last chance in a line)" << std::endl;
+      found = true;
+    }
+    return found;
   }
 
   void notify(unsigned char impossibleValue)
@@ -57,6 +121,11 @@ public:
     tripples[0].disableValue(impossibleValue);
     tripples[1].disableValue(impossibleValue);
     tripples[2].disableValue(impossibleValue);
+  }
+
+  SudokuItem *getItem(unsigned char index)
+  {
+    return tripples[index/3].getItem(index % 3);
   }
 
   void print() const
