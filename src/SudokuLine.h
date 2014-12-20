@@ -46,6 +46,14 @@ public:
     tripples[2].getItem(2)->setID(ID*9+8);
   }
 
+  bool containsValue(unsigned char value) const
+  {
+    for(unsigned char i=0; i<9; i++)
+      if(getItem(i)->isFixed() && getItem(i)->getValue() == value)
+        return true;
+    return false;
+  }
+
   bool setValue(unsigned char index, unsigned char value)
   {
     if(index >= 9)
@@ -82,6 +90,13 @@ public:
       }
 
     return false;
+  }
+
+  bool disableValueInATripple(unsigned char value, unsigned char trippleIndex)
+  {
+    if(trippleIndex > 2)
+      return false;
+    return tripples[trippleIndex].disableValue(value);
   }
 
   bool setLastChance()

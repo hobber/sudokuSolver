@@ -14,7 +14,7 @@ int main( int argc, const char* argv[] )
     std::cout << std::endl << "Sudoku solved :)" << std::endl << std::endl;
   else {
     std::cout << std::endl << "Sudoku incomplete :(" << std::endl << std::endl;
-    
+    /*
     while(true)
     {
       field.print();
@@ -26,7 +26,7 @@ int main( int argc, const char* argv[] )
       for(unsigned char i=0; i<possibilities.size(); i++)
         std::cout << (int)possibilities[i] << " ";
       std::cout << std::endl;
-    }
+    }/**/
   }
 /**/  
   field.print();

@@ -99,11 +99,66 @@ public:
           found = true;
         
         if(columns[i].setLastChance())
-          found = true;
-      }       
+          found = true;        
+      }      
+
+      if(found == false && filterValues())
+        found = true;
+
     } while(found);
 
     return isSolved();
+  }
+
+  /**
+  * test for each tripple in a box if it is the last 
+  * one which can contain a value. If so, then this
+  * value can be delete from other lines possibilities.
+  */
+  bool filterValues() 
+  {    
+    bool found = false;
+    for(unsigned char i=0; i<9; i++)
+    {
+      for(unsigned char v=0; v<9; v++)
+      {
+        if(boxes[i].containsValue(v))
+          continue;
+
+        for(unsigned char l=0; l<3; l++) {
+          if(boxes[i].lineMustContainValue(v, l, false))
+          {
+            unsigned char columnID = (i % 3) * 3 + l;             
+            unsigned char trippleID1 = ((i / 3) + 1) % 3;
+            unsigned char trippleID2 = ((i / 3) + 2) % 3;
+
+            if((columns[columnID].disableValueInATripple(v, trippleID1) |
+                columns[columnID].disableValueInATripple(v, trippleID2)) == false)            
+              continue;
+
+            found = true;
+            std::cout << "filter " << (int)v << " in column " << (int) columnID << " in boxes ";
+            std::cout << (int)trippleID1 << ", " << (int)trippleID2 << std::endl;
+
+          }
+          if(boxes[i].lineMustContainValue(v, l, true))
+          {
+            unsigned char rowID = (i / 3) * 3 + l;
+            unsigned char trippleID1 = ((i % 3) + 1) % 3;
+            unsigned char trippleID2 = ((i % 3) + 2) % 3;
+            
+            if((rows[rowID].disableValueInATripple(v, trippleID1) |
+                rows[rowID].disableValueInATripple(v, trippleID2)) == false)            
+              continue;
+
+            found = true;
+            std::cout << "filter " << (int)v << " in row " << (int) rowID << " in boxes ";
+            std::cout << (int)trippleID1 << ", " << (int)trippleID2 << std::endl;
+          } 
+        }      
+      }      
+    }
+    return found;
   }
 
   std::vector<unsigned char> getPossibilites(unsigned char ID) const

@@ -63,7 +63,7 @@ public:
     for(unsigned char i=0; i<9; i++)
       if(containsValue[i] == false) 
       {
-        items[unsetItemIndex].setValue(i+1);
+        items[unsetItemIndex].setValue(i+1);        
         std::cout << " (last item in a box)" << std::endl;
         return true;
       }
@@ -96,7 +96,7 @@ public:
       if(counter != 1)
         continue;
 
-      items[index].setValue(value);
+      items[index].setValue(value);        
       std::cout << " (last chance in a box)" << std::endl;
       found = true;
     }
@@ -117,6 +117,59 @@ public:
     for(unsigned char i=0; i<9; i++)
       if(items[i].isFixed() == false)
         return false;
+    return true;
+  }
+
+  bool containsValue(unsigned char value) const
+  {
+    for(unsigned char i=0; i<9; i++)
+      if(items[i].isFixed() && items[i].getValue() == value)
+        return true;
+    return false;
+  }
+
+  bool lineMustContainValue(unsigned char value, unsigned char lineIndex, bool horizontal) const
+  {
+    if(horizontal)
+    {
+      bool canContainValue = false;
+      for(unsigned char i=0; i<3 && canContainValue == false; i++)
+        if(items[lineIndex*3 + i].testValue(value))
+          canContainValue = true;
+
+      if(canContainValue == false)
+        return false;
+
+      lineIndex = (lineIndex + 1) % 3;      
+      for(unsigned char i=0; i<3; i++)
+        if(items[lineIndex*3 + i].testValue(value))
+          return false;
+
+      lineIndex = (lineIndex + 1) % 3;      
+      for(unsigned char i=0; i<3; i++)
+        if(items[lineIndex*3 + i].testValue(value))
+          return false;
+    }
+    else
+    {
+      bool canContainValue = false;
+      for(unsigned char i=0; i<3 && canContainValue == false; i++)
+        if(items[i*3 + lineIndex].testValue(value))
+          canContainValue = true;
+
+      if(canContainValue == false)
+        return false;
+
+      lineIndex = (lineIndex + 1) % 3;      
+      for(unsigned char i=0; i<3; i++)
+        if(items[i*3 + lineIndex].testValue(value))
+          return false;
+
+      lineIndex = (lineIndex + 1) % 3;      
+      for(unsigned char i=0; i<3; i++)
+        if(items[i*3 + lineIndex].testValue(value))
+          return false;
+    }
     return true;
   }
 

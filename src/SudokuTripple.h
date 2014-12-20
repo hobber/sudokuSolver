@@ -61,11 +61,11 @@ public:
     items[2]->addListener(listener);    
   }
 
-  void disableValue(unsigned char impossibleValue)
+  bool disableValue(unsigned char impossibleValue)
   {
-    items[0]->disableValue(impossibleValue);
-    items[1]->disableValue(impossibleValue);
-    items[2]->disableValue(impossibleValue);  
+    return items[0]->disableValue(impossibleValue) |
+           items[1]->disableValue(impossibleValue) |
+           items[2]->disableValue(impossibleValue);  
   }
 
   void print() const
