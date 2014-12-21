@@ -9,29 +9,24 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
 
-#include "SudokuItem.h"
-#include "SudokuItemListener.h"
+#include "SudokuItemState.h"
 
-class SudokuTripple {
+class SudokuItemState;
 
-  SudokuItem *items[3];
+class SudokuHistory {
+
+  std::vector<SudokuItemState> history;
+  int index;
 
 public:
 
-  SudokuTripple();
+  SudokuHistory();
 
-  SudokuTripple(SudokuItem *item0, SudokuItem *item1, SudokuItem *item2);
+  void add(const SudokuItemState &state);
 
-  SudokuTripple(const SudokuTripple &rhs);
+  void undo(unsigned int steps=1);
+  void redo(unsigned int steps=1);
 
-  SudokuItem *getItem(unsigned char index) const;
-
-  bool setValue(unsigned char index, unsigned char value);
-
-  void addListener(SudokuItemListener* listener);
-
-  bool disableValue(unsigned char impossibleValue);
-
-  void print() const;
 };
