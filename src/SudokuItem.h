@@ -30,12 +30,15 @@ public:
   ~SudokuItem();
 
   void setID(unsigned char ID);
+  unsigned char getID() const;
 
   void setHistory(SudokuHistory *history);
 
   bool testValue(unsigned char value) const;
 
   void addListener(SudokuItemListener* listener);
+
+  unsigned char countPossibilities() const;
 
   bool setSingleChoice();
 

@@ -35,4 +35,6 @@ struct SudokuItemState {
     	out << " = " << (int)state.value;
     return out;
   }
+
+  void print() const;
 };

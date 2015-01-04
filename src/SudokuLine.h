@@ -9,10 +9,10 @@
 #pragma once
 
 #include "SudokuItem.h"
-#include "SudokuItemListener.h"
+#include "SudokuItemGroup.h"
 #include "SudokuTripple.h"
 
-class SudokuLine : public SudokuItemListener {
+class SudokuLine : public SudokuItemGroup {
 
   SudokuTripple tripples[3];
 
@@ -23,10 +23,6 @@ public:
 
   void setID(unsigned char ID);
 
-  bool containsValue(unsigned char value) const;
-
-  bool setValue(unsigned char index, unsigned char value);
-
   bool setLastItem();
 
   bool disableValueInATripple(unsigned char value, unsigned char trippleIndex);
@@ -35,7 +31,9 @@ public:
 
   void notify(unsigned char impossibleValue);
 
-  SudokuItem *getItem(unsigned char index) const;
+  SudokuItem *getItem(unsigned char index);
+
+  const SudokuItem *getConstItem(unsigned char index) const;
 
   void print() const;
 

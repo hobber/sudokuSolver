@@ -30,21 +30,6 @@ void SudokuLine::setID(unsigned char ID)
   tripples[2].getItem(2)->setID(ID*9+8);
 }
 
-bool SudokuLine::containsValue(unsigned char value) const
-{
-  for(unsigned char i=0; i<9; i++)
-    if(getItem(i)->isFixed() && getItem(i)->getValue() == value)
-      return true;
-  return false;
-}
-
-bool SudokuLine::setValue(unsigned char index, unsigned char value)
-{
-  if(index >= 9)
-    return false;
-  return getItem(index)->setValue(value);
-}
-
 bool SudokuLine::setLastItem()
 {
   unsigned char fixedItemCounter = 0;    
@@ -122,7 +107,13 @@ void SudokuLine::notify(unsigned char impossibleValue)
   tripples[2].disableValue(impossibleValue);
 }
 
-SudokuItem *SudokuLine::getItem(unsigned char index) const
+SudokuItem *SudokuLine::getItem(unsigned char index)
+{
+  return tripples[index/3].getItem(index % 3);
+}
+
+
+const SudokuItem *SudokuLine::getConstItem(unsigned char index) const
 {
   return tripples[index/3].getItem(index % 3);
 }

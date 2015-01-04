@@ -10,8 +10,11 @@ int main( int argc, const char* argv[] )
   field.readFromInput();
 
   std::cout << std::endl << "start solving..." << std::endl;
-  if(field.solve())
-    std::cout << std::endl << "Sudoku solved :)" << std::endl << std::endl;
+  if(field.solve()) {
+    std::cout << std::endl << "Sudoku solved :)   ";
+    field.printDifficultyLevel();
+    std::cout << std::endl << std::endl;
+  }
   else {
     std::cout << std::endl << "Sudoku incomplete :(" << std::endl << std::endl;
   }

@@ -13,9 +13,10 @@
 
 #include "SudokuHistory.h"
 #include "SudokuItem.h"
+#include "SudokuItemGroup.h"
 #include "SudokuTripple.h"
 
-class SudokuBox : public SudokuItemListener {
+class SudokuBox : public SudokuItemGroup {
 
   SudokuItem items[9];
 
@@ -29,6 +30,8 @@ public:
 
   SudokuTripple getRowTripple(unsigned char index);
 
+  unsigned int countFixedValues() const;
+
   bool setLastItem();
 
   bool setLastChance();
@@ -37,11 +40,13 @@ public:
 
   bool isComplete() const;
 
-  bool containsValue(unsigned char value) const;
-
   bool lineMustContainValue(unsigned char value, unsigned char lineIndex, bool horizontal) const;
 
   void notify(unsigned char impossibleValue);
 
-  void print();
+  SudokuItem *getItem(unsigned char index);
+
+  const SudokuItem *getConstItem(unsigned char index) const;
+
+  void print() const;
 };

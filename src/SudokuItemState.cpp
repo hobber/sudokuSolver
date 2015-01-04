@@ -16,3 +16,13 @@ void SudokuItemState::set(const SudokuItemState &src)
   for(unsigned char i=0; i<9; i++)
     possibilites[i] = src.possibilites[i];
 }
+
+void SudokuItemState::print() const
+{
+  std::cout << (int)ID << ": ";
+  for(unsigned char i=0; i<9; i++)
+    if(possibilites[i])
+      std::cout << (int)(i+1);
+    else
+      std::cout << "_";
+}

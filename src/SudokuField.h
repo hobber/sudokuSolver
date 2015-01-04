@@ -19,21 +19,62 @@
 
 class SudokuField {
 
+public:
+
+  /**
+   * defined according http://sudoku.soeinding.de/strategie/strategie03.php
+   */
+  enum DifficultyLevel {
+    VERY_EASY,
+    EASY,
+    DEFAULT,
+    MODERATE,
+    DEMANDING,
+    VERY_DEMANDING,
+    DEVILISHLY,
+    VERY_DEVILISHLY
+  };
+
+private:  
+
   SudokuBox boxes[9];
   SudokuLine columns[9];
   SudokuLine rows[9];
 
   SudokuHistory history;
+  DifficultyLevel level;
 
 public:
 
   SudokuField();
+
+  unsigned int countFixedValues() const;
 
   bool setValue(unsigned char column, unsigned char row, unsigned char value);
 
   bool isSolved() const;
 
   bool solve();
+
+  DifficultyLevel getDifficultyLevel() const;
+
+  void printDifficultyLevel() const;
+
+  /**
+  * search if in a group only one item
+  * can have a certain value
+  */
+  bool scanValues();
+
+  /**
+   * search if a item can be only one value
+   */
+  bool excludeAlternatives();
+
+  /**
+   * search pairs and remove them from other items
+   */
+  bool checkForPair();
 
   /**
   * test for each tripple in a box if it is the last 

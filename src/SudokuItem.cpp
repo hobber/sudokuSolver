@@ -18,6 +18,11 @@ void SudokuItem::setID(unsigned char ID)
   state->ID = ID;
 }
 
+unsigned char SudokuItem::getID() const
+{
+  return state->ID;
+}
+
 void SudokuItem::setHistory(SudokuHistory *history)
 {
   this->history = history;
@@ -33,17 +38,22 @@ void SudokuItem::addListener(SudokuItemListener* listener)
   listeners.push_back(listener);
 }
 
-bool SudokuItem::setSingleChoice()
+unsigned char SudokuItem::countPossibilities() const
 {
   if(isFixed())
-    return false;
+    return 0;
 
   unsigned char possibilyCounter = 0;
   for(unsigned char i=0; i<9; i++)
     if(state->possibilites[i])
       possibilyCounter++;
 
-  if(possibilyCounter != 1)
+  return possibilyCounter;
+}
+
+bool SudokuItem::setSingleChoice()
+{
+  if(countPossibilities() != 1)
     return false;
 
   for(unsigned char i=0; i<9; i++)

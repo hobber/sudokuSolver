@@ -2,7 +2,9 @@
 #include "SudokuField.h"
 
 SudokuField::SudokuField()
-{    
+{ 
+  level = VERY_EASY;
+
   boxes[0].setHistory(&history);
   boxes[1].setHistory(&history);
   boxes[2].setHistory(&history);
@@ -44,6 +46,14 @@ SudokuField::SudokuField()
   rows[8].setID(8);
 }
 
+unsigned int SudokuField::countFixedValues() const
+{
+  unsigned int count = 0;
+  for(unsigned char i=0; i<9; i++)
+    count += boxes[i].countFixedValues();
+  return count;
+}
+
 bool SudokuField::setValue(unsigned char column, unsigned char row, unsigned char value)  
 {
   bool result = columns[column].setValue(row, value);
@@ -60,41 +70,96 @@ bool SudokuField::isSolved() const
 }
 
 bool SudokuField::solve()
-{   
-  bool found = false;     
-  do
+{  
+  if(isSolved())
+    return true;
+
+  int count = countFixedValues(); 
+  if(count >= 35)
+    level = VERY_EASY;
+  else if(count >= 30)
+    level = EASY;
+  else if(count >= 24)
+    level = DEFAULT;
+  else
+    level = MODERATE;
+
+  while(true)
   {
-    found = false;
-    for(unsigned char i=0; i<9; i++)
-    {
-      if(boxes[i].setLastItem())
-        found = true;
-      
-      if(boxes[i].setLastChance())
-        found = true;
+    if(isSolved())
+      return true;
 
-      if(boxes[i].setSingleChoice())             
-        found = true;
+    //very easy + easy
+    if(scanValues())
+      continue;
 
-      if(rows[i].setLastItem())
-        found = true;
-      
-      if(rows[i].setLastChance())
-        found = true;
+    //default
+    level = DEFAULT;
+    if(excludeAlternatives())
+      continue;
+    
+    //moderate
+    level = MODERATE;
+    if(checkForPair())
+      continue;
 
-      if(columns[i].setLastItem())
-        found = true;
-      
-      if(columns[i].setLastChance())
-        found = true;        
-    }      
+    break;
+  }
 
-    if(found == false && filterValues())
-      found = true;
+  return false;
+}
 
-  } while(found);
+SudokuField::DifficultyLevel SudokuField::getDifficultyLevel() const
+{
+  return level;
+}
 
-  return isSolved();
+void SudokuField::printDifficultyLevel() const
+{
+  switch(level)
+  {
+    case VERY_EASY:       std::cout << "VERY EASY";       break;
+    case EASY:            std::cout << "EASY";            break;
+    case DEFAULT:         std::cout << "DEFAULT";         break;
+    case MODERATE:        std::cout << "MODERATE";        break;
+    case DEMANDING:       std::cout << "DEMANDING";       break;
+    case VERY_DEMANDING:  std::cout << "VERY DEMANDING";  break;
+    case DEVILISHLY:      std::cout << "DEVILISHLY";      break;
+    case VERY_DEVILISHLY: std::cout << "VERY DEVILISHLY"; break;
+    default:              std::cout << "UNKNOWN";         break;
+  }
+}
+
+bool SudokuField::scanValues()
+{
+  bool found = false;
+  for(unsigned char i=0; i<9; i++) 
+  {
+    found |= boxes[i].setLastChance();
+    found |= rows[i].setLastChance();
+    found |= columns[i].setLastChance();
+  }
+  return found;
+}
+
+bool SudokuField::excludeAlternatives()
+{
+  bool found = false;
+  for(unsigned char i=0; i<9; i++) {
+    found |= boxes[i].setSingleChoice();
+  }
+  return found;
+}
+
+bool SudokuField::checkForPair()
+{
+  bool found = false;
+  for(unsigned char i=0; i<9; i++) {
+    found |= boxes[i].checkForPair();
+    found |= rows[i].checkForPair();
+    found |= columns[i].checkForPair();
+  }
+  return found;
 }
 
 bool SudokuField::filterValues() 
@@ -145,7 +210,7 @@ bool SudokuField::filterValues()
 
 std::vector<unsigned char> SudokuField::getPossibilites(unsigned char ID) const
 {
-   return rows[ID/9].getItem(ID % 9)->getPossibilites();
+   return rows[ID/9].getConstItem(ID % 9)->getPossibilites();
 }
 
 void SudokuField::readFromInput()

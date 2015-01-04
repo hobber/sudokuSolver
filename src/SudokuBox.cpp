@@ -27,6 +27,15 @@ SudokuTripple SudokuBox::getRowTripple(unsigned char index)
   return SudokuTripple(&items[3*index], &items[3*index+1], &items[3*index+2]); 
 }
 
+unsigned int SudokuBox::countFixedValues() const
+{
+  unsigned int count = 0;
+  for(unsigned char i=0; i<9; i++)
+    if(items[i].isFixed())
+     count++;
+  return count; 
+}
+
 bool SudokuBox::setLastItem()
 {
   unsigned char fixedItemCounter = 0;    
@@ -107,14 +116,6 @@ bool SudokuBox::isComplete() const
   return true;
 }
 
-bool SudokuBox::containsValue(unsigned char value) const
-{
-  for(unsigned char i=0; i<9; i++)
-    if(items[i].isFixed() && items[i].getValue() == value)
-      return true;
-  return false;
-}
-
 bool SudokuBox::lineMustContainValue(unsigned char value, unsigned char lineIndex, bool horizontal) const
 {
   if(horizontal)
@@ -166,7 +167,17 @@ void SudokuBox::notify(unsigned char impossibleValue)
     items[i].disableValue(impossibleValue);
 }
 
-void SudokuBox::print()
+SudokuItem *SudokuBox::getItem(unsigned char index)
+{
+  return &items[index];
+}
+
+const SudokuItem *SudokuBox::getConstItem(unsigned char index) const
+{
+  return &items[index];
+}
+
+void SudokuBox::print() const
 {
   for(unsigned char i=0; i<9; i++)
   {
